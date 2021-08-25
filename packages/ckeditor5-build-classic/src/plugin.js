@@ -134,7 +134,7 @@ export default class HCardEditing extends Plugin {
 
 function getCardDataFromViewElement( viewElement ) {
   const children = Array.from( viewElement.getChildren() );
-  const aliasElement = children.find( element => element.is( 'element', 'span') && element.hasClass('alias'))
+  const aliasElement = children.find( element => element.is( 'element', 'span') && element.hasClass('slot-alias'))
 
   return {
     alias: getText(alias),
