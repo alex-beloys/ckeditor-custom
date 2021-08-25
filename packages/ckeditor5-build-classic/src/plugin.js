@@ -8,6 +8,10 @@ export default class HCardEditing extends Plugin {
 	return [ Widget ];
   }
 
+  static get pluginName() {
+    return 'Test plugin'
+  }
+
   init() {
 	this._defineSchema();
 	this._defineConverters();
