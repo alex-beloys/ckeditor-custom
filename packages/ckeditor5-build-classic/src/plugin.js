@@ -9,7 +9,7 @@ export default class HCardEditing extends Plugin {
   }
 
   static get pluginName() {
-    return 'Slot alias items'
+	return 'Test plugin'
   }
 
   init() {
@@ -21,16 +21,16 @@ export default class HCardEditing extends Plugin {
 	// but in the view it is a more complex structure.
 	this.editor.editing.mapper.on(
 	  'viewToModelPosition',
-	  viewToModelPositionOutsideModelElement( this.editor.model, viewElement => viewElement.hasClass( 'slot-item' ) )
+	  viewToModelPositionOutsideModelElement( this.editor.model, viewElement => viewElement.hasClass( 'h-card' ) )
 	);
   }
 
   _defineSchema() {
-	this.editor.model.schema.register( 'slot-item', {
+	this.editor.model.schema.register( 'h-card', {
 	  allowWhere: '$text',
 	  isInline: true,
 	  isObject: true,
-	  allowAttributes: [ 'alias' ]
+	  allowAttributes: [ 'email', 'name', 'tel' ]
 	} );
   }
 
@@ -41,7 +41,7 @@ export default class HCardEditing extends Plugin {
 	conversion.for( 'upcast' ).elementToElement( {
 	  view: {
 		name: 'span',
-		classes: [ 'slot-item' ]
+		classes: [ 'h-card' ]
 	  },
 	  model: ( viewElement, { writer } ) => {
 		return writer.createElement( 'h-card', getCardDataFromViewElement( viewElement ) );
@@ -50,27 +50,31 @@ export default class HCardEditing extends Plugin {
 
 	// Model-to-data conversion.
 	conversion.for( 'dataDowncast' ).elementToElement( {
-	  model: 'slot-item',
+	  model: 'h-card',
 	  view: ( modelItem, { writer: viewWriter } ) => createCardView( modelItem, viewWriter )
 	} );
 
 	// Model-to-view conversion.
 	conversion.for( 'editingDowncast' ).elementToElement( {
-	  model: 'slot-item',
+	  model: 'h-card',
 	  view: ( modelItem, { writer: viewWriter } ) => toWidget( createCardView( modelItem, viewWriter ), viewWriter )
 	} );
 
 	// Helper method for both downcast converters.
 	function createCardView( modelItem, viewWriter ) {
-	  const alias = modelItem.getAttribute( 'alias' ); //
+	  const email = modelItem.getAttribute( 'email' );
+	  const name = modelItem.getAttribute( 'name' );
+	  const tel = modelItem.getAttribute( 'tel' );
 
-	  const cardView = viewWriter.createContainerElement( 'span', { class: 'slot-item' } );
+	  const cardView = viewWriter.createContainerElement( 'span', { class: 'h-card' } );
+	  const linkView = viewWriter.createContainerElement( 'a', { href: `mailto:${ email }`, class: 'p-name u-email' } );
+	  const phoneView = viewWriter.createContainerElement( 'span', { class: 'p-tel' } );
 
-	  const aliasView = viewWriter.createContainerElement( 'span', { class: 'slot-alias' }) //
+	  viewWriter.insert( viewWriter.createPositionAt( linkView, 0 ), viewWriter.createText( name ) );
+	  viewWriter.insert( viewWriter.createPositionAt( phoneView, 0 ), viewWriter.createText( tel ) );
 
-	  viewWriter.insert( viewWriter.createPositionAt( aliasView, 0 ), viewWriter.createText( alias ) );
-
-	  viewWriter.insert( viewWriter.createPositionAt( cardView, 0 ), aliasView );
+	  viewWriter.insert( viewWriter.createPositionAt( cardView, 0 ), linkView );
+	  viewWriter.insert( viewWriter.createPositionAt( cardView, 'end' ), phoneView );
 
 	  return cardView;
 	}
@@ -89,14 +93,14 @@ export default class HCardEditing extends Plugin {
 		return;
 	  }
 
-	  const slotData = data.dataTransfer.getData( 'slot-alias' );
+	  const contactData = data.dataTransfer.getData( 'contact' );
 
-	  if ( !slotData ) {
+	  if ( !contactData ) {
 		return;
 	  }
 
 	  // Use JSON data encoded in the DataTransfer.
-	  const slot = JSON.parse( slotData );
+	  const contact = JSON.parse( contactData );
 
 	  // Translate the h-card data to a view fragment.
 	  const writer = new UpcastWriter( viewDocument );
@@ -104,7 +108,8 @@ export default class HCardEditing extends Plugin {
 
 	  writer.appendChild(
 		writer.createElement( 'span', { class: 'h-card' }, [
-		  writer.createElement( 'span', { class: 'slot-alias' }, slot.alias )
+		  writer.createElement( 'a', { href: `mailto:${ contact.email }`, class: 'p-name u-email' }, contact.name ),
+		  writer.createElement( 'span', { class: 'p-tel' }, contact.tel )
 		] ),
 		fragment
 	  );
@@ -121,8 +126,8 @@ export default class HCardEditing extends Plugin {
 
 	  const viewElement = data.content.getChild( 0 );
 
-	  if ( viewElement.is( 'element', 'span' ) && viewElement.hasClass( 'slot-item' ) ) {
-		data.dataTransfer.setData( 'slot-alias', JSON.stringify( getCardDataFromViewElement( viewElement ) ) );
+	  if ( viewElement.is( 'element', 'span' ) && viewElement.hasClass( 'h-card' ) ) {
+		data.dataTransfer.setData( 'contact', JSON.stringify( getCardDataFromViewElement( viewElement ) ) );
 	  }
 	} );
   }
@@ -134,10 +139,13 @@ export default class HCardEditing extends Plugin {
 
 function getCardDataFromViewElement( viewElement ) {
   const children = Array.from( viewElement.getChildren() );
-  const aliasElement = children.find( element => element.is( 'element', 'span') && element.hasClass('slot-alias'))
+  const linkElement = children.find( element => element.is( 'element', 'a' ) && element.hasClass( 'p-name' ) );
+  const telElement = children.find( element => element.is( 'element', 'span' ) && element.hasClass( 'p-tel' ) );
 
   return {
-    alias: getText(alias),
+	name: getText( linkElement ),
+	tel: getText( telElement ),
+	email: linkElement.getAttribute( 'href' ).replace( /^mailto:/i, '' )
   };
 }
 
