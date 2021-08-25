@@ -34,6 +34,7 @@
     "@ckeditor/ckeditor5-cloud-services": "^29.1.0",
     "@ckeditor/ckeditor5-easy-image": "^29.1.0",
     "@ckeditor/ckeditor5-editor-classic": "^29.1.0",
+    "@ckeditor/ckeditor5-engine": "^29.1.0",
     "@ckeditor/ckeditor5-essentials": "^29.1.0",
     "@ckeditor/ckeditor5-heading": "^29.1.0",
     "@ckeditor/ckeditor5-image": "^29.1.0",
@@ -44,7 +45,8 @@
     "@ckeditor/ckeditor5-paragraph": "^29.1.0",
     "@ckeditor/ckeditor5-paste-from-office": "^29.1.0",
     "@ckeditor/ckeditor5-table": "^29.1.0",
-    "@ckeditor/ckeditor5-typing": "^29.1.0"
+    "@ckeditor/ckeditor5-typing": "^29.1.0",
+    "@ckeditor/ckeditor5-widget": "^29.1.0"
   },
   "devDependencies": {
     "@ckeditor/ckeditor5-core": "^29.1.0",
