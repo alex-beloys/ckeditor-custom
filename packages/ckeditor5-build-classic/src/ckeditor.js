@@ -31,7 +31,7 @@ import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation';
 import CloudServices from '@ckeditor/ckeditor5-cloud-services/src/cloudservices';
 
-import HCardEditing from './plugin'
+import HCardEditing from './plugin';
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
@@ -61,7 +61,7 @@ ClassicEditor.builtinPlugins = [
 	Table,
 	TableToolbar,
 	TextTransformation,
-    HCardEditing
+	HCardEditing
 ];
 
 // Editor configuration.
@@ -82,9 +82,16 @@ ClassicEditor.defaultConfig = {
 			'uploadImage',
 			'blockQuote',
 			'insertTable',
+		    'tableColumn',
+		    'tableRow',
+		    'mergeTableCells',
 			'mediaEmbed',
 			'undo',
-			'redo'
+			'redo',
+		    '|',
+		    'ckfinder',
+		    'selectAll',
+		    'imageUpload'
 		]
 	},
 	image: {
