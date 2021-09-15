@@ -31,6 +31,9 @@ import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation';
 import CloudServices from '@ckeditor/ckeditor5-cloud-services/src/cloudservices';
 
+import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment';
+import Font from '@ckeditor/ckeditor5-font/src/font';
+
 import HCardEditing from './plugin';
 
 export default class ClassicEditor extends ClassicEditorBase {}
@@ -61,6 +64,8 @@ ClassicEditor.builtinPlugins = [
 	Table,
 	TableToolbar,
 	TextTransformation,
+	Alignment,
+	Font,
 	HCardEditing
 ];
 
@@ -69,9 +74,15 @@ ClassicEditor.defaultConfig = {
 	toolbar: {
 		items: [
 			'heading',
+		    'bold',
+		    'italic',
+		  	'|',
+		    'fontSize',
+		    'fontFamily',
+		    'fontColor',
+		    'fontBackgroundColor',
 			'|',
-			'bold',
-			'italic',
+		    'alignment',
 			'link',
 			'bulletedList',
 			'numberedList',
@@ -109,6 +120,26 @@ ClassicEditor.defaultConfig = {
 			'tableColumn',
 			'tableRow',
 			'mergeTableCells'
+		]
+	},
+	fontSize: {
+	  options: [
+	    10, 12, 14, 16, 18, 20, 22, 24
+	  ],
+	  supportAllValues: true
+	},
+	fontFamily: {
+		options: [
+		  'default',
+		  'Arial, Helvetica, sans-serif',
+		  'Courier New, Courier, monospace',
+		  'Georgia, serif',
+		  'Lucida Sans Unicode, Lucida Grande, sans-serif',
+		  'Tahoma, Geneva, sans-serif',
+		  'Times New Roman, Times, serif',
+		  'Trebuchet MS, Helvetica, sans-serif',
+		  'Verdana, Geneva, sans-serif',
+		  'Calibri, sans-serif'
 		]
 	},
 	// This value must be kept in sync with the language defined in webpack.config.js.
