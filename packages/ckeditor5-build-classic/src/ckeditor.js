@@ -80,18 +80,31 @@ ClassicEditor.defaultConfig = {
 		    'fontSize',
 		    'fontFamily',
 		    'fontColor',
+		    'fontBackgroundColor',
 			'|',
 		    'alignment',
 			'link',
 			'bulletedList',
 			'numberedList',
 			'|',
+			'outdent',
+			'indent',
+			'|',
 			'uploadImage',
 			'blockQuote',
 			'insertTable',
+		    'tableColumn',
+		    'tableRow',
+		    'mergeTableCells',
+			'mediaEmbed',
 			'undo',
-			'redo'
-		]
+			'redo',
+		    '|',
+		    'ckfinder',
+		    'selectAll',
+		    'imageUpload'
+		],
+	    shouldNotGroupWhenFull: false
 	},
 	image: {
 		toolbar: [
