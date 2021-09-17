@@ -5,6 +5,7 @@
 
 // The editor creator to use.
 import ClassicEditorBase from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
+import DecoupledEditorBase from '@ckeditor/ckeditor5-editor-decoupled/src/decouplededitor';
 
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
 import UploadAdapter from '@ckeditor/ckeditor5-adapter-ckfinder/src/uploadadapter';
@@ -22,7 +23,6 @@ import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar';
 import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
 import Indent from '@ckeditor/ckeditor5-indent/src/indent';
 import Link from '@ckeditor/ckeditor5-link/src/link';
-import List from '@ckeditor/ckeditor5-list/src/list';
 import MediaEmbed from '@ckeditor/ckeditor5-media-embed/src/mediaembed';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice';
@@ -33,10 +33,12 @@ import CloudServices from '@ckeditor/ckeditor5-cloud-services/src/cloudservices'
 
 import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment';
 import Font from '@ckeditor/ckeditor5-font/src/font';
+import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle';
+import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace';
 
 import HCardEditing from './plugin';
 
-export default class ClassicEditor extends ClassicEditorBase {}
+export default class ClassicEditor extends DecoupledEditorBase {}
 
 // Plugins to include in the build.
 ClassicEditor.builtinPlugins = [
@@ -57,7 +59,7 @@ ClassicEditor.builtinPlugins = [
 	ImageUpload,
 	Indent,
 	Link,
-	List,
+	ListStyle,
 	MediaEmbed,
 	Paragraph,
 	PasteFromOffice,
@@ -66,6 +68,8 @@ ClassicEditor.builtinPlugins = [
 	TextTransformation,
 	Alignment,
 	Font,
+	BlockQuote,
+	FindAndReplace,
 	HCardEditing
 ];
 
@@ -73,15 +77,19 @@ ClassicEditor.builtinPlugins = [
 ClassicEditor.defaultConfig = {
 	toolbar: {
 		items: [
+		    '|',
 			'heading',
 		    'bold',
 		    'italic',
 		  	'|',
+		    'blockQuote',
+		    'lineHeight',
 		    'fontSize',
 		    'fontFamily',
 		    'fontColor',
 		    'fontBackgroundColor',
 			'|',
+		    'FindAndReplace',
 		    'alignment',
 			'link',
 			'bulletedList',
@@ -91,7 +99,6 @@ ClassicEditor.defaultConfig = {
 			'indent',
 			'|',
 			'uploadImage',
-			'blockQuote',
 			'insertTable',
 		    'tableColumn',
 		    'tableRow',
@@ -122,6 +129,25 @@ ClassicEditor.defaultConfig = {
 			'tableRow',
 			'mergeTableCells'
 		]
+	},
+	exportPdf: {
+	  stylesheets: [ 'EDITOR_STYLES' ],
+	  fileName: 'document.pdf',
+	  converterUrl: 'https://pdf-converter.cke-cs.com/v1/convert',
+	  converterOptions: {
+			format: 'A4',
+			margin_top: '0',
+			margin_bottom: '0',
+			margin_right: '0',
+			margin_left: '0',
+			page_orientation: 'portrait',
+			header_html: undefined,
+			footer_html: undefined,
+			header_and_footer_css: undefined,
+			wait_for_network: true,
+			wait_time: 0
+	  },
+	  dataCallback: editor => editor.getData()
 	},
 	fontSize: {
 	  options: [
